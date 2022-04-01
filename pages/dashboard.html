@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- FontAweome CDN Link for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
+    <!----======== CSS ======== -->
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/dash.css">
+    <!----===== Iconscout CSS ===== -->
+    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
+    <title>Admin Dashboard Panel</title> 
+
+</head>
+  <body>
+
+    <nav>
+        <div class="logo-name">
+            <div class="logo-image">
+                <img src="../images/logo.png" alt="">
+            </div>
+
+            <span class="logo_name">CodingLab</span>
+        </div>
+
+        <div class="menu-items">
+            <ul class="nav-links">
+                <span class="logout-mode roles">Faculty</span>
+                <li><a href="#">
+                    <i class="uil uil-estate"></i>
+                    <span class="link-name">Feed</span>
+                </a></li>
+                <li><a href="#">
+                    <i class="uil uil-files-landscapes"></i>
+                    <span class="link-name">Most Liked</span>
+                </a></li>
+                <li><a href="#">
+                    <i class="uil uil-chart"></i>
+                    <span class="link-name">Most Commented</span>
+                </a></li>  
+
+
+                <span class="logout-mode roles">Assurance Manager</span>
+                <li><a href="#">
+                    <i class="uil uil-thumbs-up"></i>
+                    <span class="link-name">Catagories</span>
+                </a></li>
+                <li><a href="#">
+                    <i class="uil uil-comments"></i>
+                    <span class="link-name">Downlaod</span>
+                </a></li>
+                <li><a href="#">
+                    <i class="uil uil-comments"></i>
+                    <span class="link-name">Reports</span>
+                </a></li>
+
+
+                <span class="logout-mode roles">Administrator</span>
+                <li><a href="#">
+                    <i class="uil uil-share"></i>
+                    <span class="link-name">Closure Dates</span>
+                </a></li>
+                <li><a href="#">
+                    <i class="uil uil-comments"></i>
+                    <span class="link-name">Add Staff</span>
+                </a></li>
+                <li><a href="#">
+                    <i class="uil uil-comments"></i>
+                    <span class="link-name">Add Dept</span>
+                </a></li>
+            </ul>
+            
+            <ul class="logout-mode">
+                <li><a href="#">
+                    <i class="uil uil-signout"></i>
+                    <span class="link-name">Logout</span>
+                </a></li>            
+            </ul>
+        </div>
+    </nav>
+
+    <div class="body">
+        <div class="container">
+        <div class="wrapper">
+            <section class="post">
+            <form action="#">
+                <div class="content">
+                <img src="icons/logo.png" alt="logo">
+                <div class="details">
+                    <p>Name</p>
+                    <div class="privacy">
+                    <span>Faculty </span>
+                    </div>
+                </div>
+                </div>
+                <textarea placeholder="What's on your mind, CodingNepal?" spellcheck="false" required></textarea>
+               
+                <div class="options">
+                <p>Upload Documents</p>
+                <ul class="list">
+                    <li><img src="icons/gallery.svg" alt="gallery"></li>
+                    <li><img src="icons/more.svg" alt="gallery"></li>
+                </ul>
+                </div>
+                <button>Post</button>
+            </form>
+    
+        </div>
+        </div>
+    </div>
+
+  </body>
+  <script>
+    var dropdown = document.getElementsByClassName("dropdown-btn");
+    var i;
+
+    for (i = 0; i < dropdown.length; i++) {
+    dropdown[i].addEventListener("click", function() {
+        this.classList.toggle("active");
+        var dropdownContent = this.nextElementSibling;
+        if (dropdownContent.style.display === "block") {
+        dropdownContent.style.display = "none";
+        } else {
+        dropdownContent.style.display = "block";
+        }
+    });
+    }
+  </script>
+</html>
