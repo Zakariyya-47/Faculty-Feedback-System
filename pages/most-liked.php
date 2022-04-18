@@ -1,13 +1,100 @@
-<?php include_once "../php/partials/side-menu.php";
+<?php
+include_once "../php/partials/side-menu.php";
+$user=$_SESSION["user"];
+
 if(isset($_SESSION["user"])){
-    ?>
+
+$nameQuery = "SELECT FirstName,LastName FROM staff where StaffID= '".$user."' ";
+$nameResult = $connect->query($nameQuery);
+$get = mysqli_fetch_assoc($nameResult);
+  
+if (isset($_GET['pageno'])) {
+      $pageno = $_GET['pageno'];
+  } else {
+      $pageno = 1;
+  }
+  $no_of_records_per_page = 5;
+  $offset = ($pageno-1) * $no_of_records_per_page;
+
+  $total_pages_sql = "SELECT COUNT(*) FROM ideas";
+  $result = mysqli_query($connect,$total_pages_sql);
+  $total_rows = mysqli_fetch_array($result)[0];
+  $total_pages = ceil($total_rows / $no_of_records_per_page);
+?>
 
 <div class="body">
     <div class="container">
     <div class="wrapper">
-        <section class="post">
-        <h1>Ideas with the Most Comments</h1>
 
+      <?php
+          $dateQuery = "SELECT closureDate FROM dates";
+          $dateResult = $connect->query($dateQuery);
+          $datescheck = mysqli_fetch_assoc($dateResult);
+          $closureDate = $datescheck['closureDate'];
+          $date = date('Y-m-d');
+          ?>
+
+        <section class="post">
+        <?php if($date < $closureDate){ ?>
+        <form action="../php/addidea.php" method=POST enctype="multipart/form-data">
+            <div class="content">
+            <img src="../images/profile.jpg" alt="logo">
+            <div class="details">
+                <p><?php echo $get['FirstName'];?> <?php echo $get['LastName'];?></p>
+                <div class="privacy">
+                <span>Faculty</span>
+                </div>
+            </div>
+            </div>
+            
+            <textarea name="idea" placeholder="What's on your mind,?" required></textarea>
+            
+              <div class="container22">
+                <div class="card">
+                  <h3>Upload Files</h3>
+                  <div class="drop_box">
+                    <header>
+                      <h4>Select Files</h4>
+                      <p>Files Supported: PDF, DOC</p>
+                    </header>
+                    <input type="file" name="featured_image" class="btn ">
+                  </div>
+                </div>
+
+                <div class="opt">
+                  <h3>Options</h3>
+                  <div class="option"> <style>.option{display:flex};</style>
+                    <input type="checkbox" id="weekday-1" name="terms" value="1" required> 
+                    <label for="weekday-1">Agree Terms and Conditions</label>
+
+                    <input type="checkbox" id="weekday-2" name="anon" value="1">
+                    <label for="weekday-2">Post it as Anonomous</label>
+
+                    <span class="choose">Choose Category</span>
+                    <select name="category" required>
+                      <?php 
+                          $catgQuery = "SELECT * FROM categories";
+                          $catgResult = $connect->query($catgQuery);		
+                          while($catg = mysqli_fetch_assoc($catgResult)){
+                      ?>
+                        <option value="
+                            <?php echo $catg["CategoryID"];?>">
+                            <?php echo $catg["CategoryName"];?>
+                        </option>
+                      <?php }; ?>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+        <button name="idea-submit" type="submit" value="Upload">Post</button>
+        </form>
+        <?php } else{ ?>
+          <h1>Closure Date for Ideas</h1>
+            <script>
+              .post{display:hidden;}
+            </script>
+          <?php } ?>
     </div>
     </div>
 </div>
@@ -15,7 +102,7 @@ if(isset($_SESSION["user"])){
 <div class="ideas">
 
 <?php
-$commentQuery = "SELECT * FROM ideas ORDER BY IdeaID DESC LIMIT $offset, $no_of_records_per_page";
+$commentQuery = "SELECT * FROM ideas ORDER BY Upvotes DESC LIMIT $offset, $no_of_records_per_page";
 $commentsResult = $connect->query($commentQuery);		
 while($row = mysqli_fetch_assoc($commentsResult)){
 $name = $row['Staff_StaffID'];
@@ -57,13 +144,15 @@ $get = mysqli_fetch_assoc($nameResult);
                 <span><?php echo $row['Upvotes'];?></span>
             </button>
 
-        </div>
-        <?php if(!empty($row['file_name'])) { ?>
-        <div class="">
-            <a href="../php/file-download.php?file_id=<?php echo $row['IdeaID'];?>">
-            Download<?php echo $row['file_name']; ?></a>
-        </div>
+            <?php if(!empty($row['file_name'])) { ?>
+            <button class="comments" onclick="location.href='../php/file-download.php?file_id=<?php echo $row['IdeaID'];?>'" type="button">
+                <a class="options"><i class="fa fa-download"></i>    
+                <span>Download <?php echo $row['file_name']; ?></span>
+            </button>
         <?php }; ?>
+
+        </div>
+       
     </div>
 
 <?php

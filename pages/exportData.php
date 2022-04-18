@@ -2,28 +2,49 @@
 
 include_once '../php/partials/db_connect.php';
 
-$findDoc =  "SELECT * FROM ideas WHERE file_name IS NOT NULL";
-$checkDoc = mysqli_query($connect, $findDoc);
-$curdir = getcwd();
-$filename	=	'all-uploads.zip';
+$query = "SELECT staff.StaffID, staff.FirstName, staff.LastName, staff.Email, 
+department.DepartmentID, department.DepName, department.Cordinator, 
+ideas.IdeaID, ideas.Categories_CategoryID, ideas.Staff_StaffID, ideas.Idea, ideas.Upvotes, ideas.Downvotes, ideas.anonymous,
+comments.CommentID, comments.Content, comments.CommentSubmissionDate,
+dates.DateID, dates.closureDate, dates.FinalClosureDate
 
-$zip = new ZipArchive;
-if ($zip->open($filename,  ZipArchive::CREATE)){
-    while($row	=	$checkDoc->fetch_assoc()){
-        $zip->addFile(getcwd().'/'.'../uploads/'.$row['file_name'], $row['file_name']);
+FROM staff 
+CROSS JOIN department
+
+CROSS JOIN ideas
+
+CROSS JOIN comments
+CROSS JOIN dates";
+
+$result = $connect->query($query);
+
+
+
+if($result->num_rows>0){
+
+    $sn=1;
+    $delimiter = ",";
+    $filename = "facultyfeedbackdata.csv";
+
+    $f = fopen('php://memory', 'w');
+
+    $fields = array('StaffID', 'First Name', 'Last Name', 'Email', 'DepartmentID', 'Department Name', 'Department Coordinator', 'IdeaID', 'Categories_CategoryID', 'Staff_StaffID', 'Idea', 'Upvotes', 'Downvotes', 'CommentID', 'Content', 'CommentSubmissionDate', 'DateID', 'closureDate', 'FinalClosureDate');
+
+    fputcsv($f, $fields, $delimiter);
+
+    while($row = $result->fetch_assoc()){
+        $lineData = array($row['StaffID'], $row['FirstName'], $row['LastName'], $row['Email'], $row['DepartmentID'], $row['DepName'], $row['Cordinator'], $row['IdeaID'], $row['Categories_CategoryID'], $row['Staff_StaffID'],
+        $row['Idea'], $row['Upvotes'], $row['Downvotes'], $row['anonymous'], $row['CommentID'], $row['Content'], $row['CommentSubmissionDate'], $row['DateID'], $row['closureDate'], $row['FinalClosureDate']);
+        fputcsv($f, $lineData, $delimiter);
+        $sn++;
     }
-    
-    $zip->close();
-    
-    header("Content-type: application/zip"); 
-    header("Content-Disposition: attachment; filename=$filename");
-    header("Content-length: " . filesize($filename));
-    header("Pragma: no-cache"); 
-    header("Expires: 0"); 
-    readfile("$filename");
-    unlink($filename);
-    header("Location:../pages/dashboard.php?download successful");
 
-}else{
-   echo 'Failed!';
+    fseek($f, 0);
+
+    header('Content-Type: text/csv');
+    header('Content-Disposition: attachment; filename="' .$filename.'";');
+
+    fpassthru($f);
 }
+
+exit;
