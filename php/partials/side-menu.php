@@ -73,7 +73,7 @@ include_once "../php/partials/db_connect.php";
                     <i class="uil uil-comments"></i>
                     <span class="link-name">Downlaod Reports</span>
                 </a></li>
-                <li><a href="exportData.php">
+                <li><a href="DownloadUploads.php">
                     <i class="uil uil-comments"></i>
                     <span class="link-name">Downlaod Uploads</span>
                 </a></li>
